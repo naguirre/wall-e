@@ -1,0 +1,19 @@
+
+
+Features:
+---------
+
+* resize: adapt the size of the lines
+* fullscreen when an image is selected
+* config file with ecore_config
+
+Actions:
+--------
+
+* zoom in:
+   mouse:
+   pointer:
+
+* zoom out
+   mouse:
+   pointer:

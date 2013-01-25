@@ -1,0 +1,246 @@
+
+/*
+  fonts {
+  font: "Arial.ttf" "Regular";
+  font: "Arial-Bold.ttf" "Bold";
+  }
+*/
+
+#define GROUP_ICON(icon_file, icon_name)                                \
+   images {                                                             \
+      image: icon_file RAW;                                             \
+   }                                                                    \
+   group {                                                              \
+   name: icon_name;                                                     \
+   parts {                                                              \
+      part {                                                            \
+         name: "icon";                                                  \
+         description {                                                  \
+            state: "default" 0.0;                                       \
+            rel1 {                                                      \
+               relative: 0 0;                                           \
+            }                                                           \
+            rel2 {                                                      \
+               relative: 1.0 1.0;                                       \
+            }                                                           \
+            image {                                                     \
+               normal: icon_file;                                       \
+            }                                                           \
+         }                                                              \
+      }                                                                 \
+   }                                                                    \
+}                                                                       \
+
+collections {
+
+   /*
+    *
+    * Main UI
+    *
+    */
+
+   group {
+      name: "wall-e";
+      min: 1 1;
+
+      parts {
+         /* Background */
+         part {
+            name: "background";
+            type: RECT;
+            mouse_events: 0;
+            description {
+               state: "default" 0.0;
+               color: 100 100 100 255;
+            }
+         }
+
+         /* Wall swallow */
+         part {
+            name: "walle.swallow.content";
+            type: SWALLOW;
+            mouse_events: 1;
+            description {
+               state: "default" 0.0;
+               color: 0 0 0 255;
+               //rel1.relative: 0 1;
+
+               rel2.relative: 1 0;
+               rel2.to: "walle.swallow.toolbar";
+            }
+         }
+
+         /* Bottom panel */
+         part {
+            name: "walle.swallow.toolbar";
+            type: SWALLOW;
+            mouse_events: 1;
+            description {
+               state: "default" 0.0;
+               color: 0 255 255 255;
+               rel1.relative: 0 1;
+               rel1.offset: 0 -65;
+               rel2.relative: 1 1;
+            }
+         }
+      }
+   }
+   ///////////////////////////////////////////////////////////////////////////////
+   group { name: "walle/picture/item";
+      images {
+         image: "frame_1.png" COMP;
+         image: "frame_2.png" COMP;
+         image: "dia_grad.png" COMP;
+         image: "loading-1.png" COMP;
+         image: "loading-2.png" COMP;
+         image: "loading-3.png" COMP;
+         image: "loading-4.png" COMP;
+         image: "loading-5.png" COMP;
+         image: "loading-6.png" COMP;
+         image: "loading-7.png" COMP;
+         image: "loading-8.png" COMP;
+         image: "loading-9.png" COMP;
+      }
+      parts {
+         part { name: "base0";
+            mouse_events:  0;
+            description { state: "default" 0.0;
+               image.normal: "dia_grad.png";
+               rel1.to: "over";
+               rel2.to: "over";
+               fill {
+                  smooth: 0;
+                  size {
+                     relative: 0.0 1.0;
+                     offset: 64 0;
+                  }
+               }
+            }
+         }
+         part { name: "base";
+            mouse_events:  0;
+            description { state:    "default" 0.0;
+               rel1.to: "over";
+               rel2.to: "over";
+               image {
+                  normal: "frame_2.png";
+                  border: 5 5 32 26;
+                  middle: 0;
+               }
+               fill.smooth : 0;
+            }
+         }
+         part { name: "walle.swallow.content";
+            type: SWALLOW;
+            description { state: "default" 0.0;
+               rel1.offset: 8 8;
+               rel1.to: "over";
+               rel2.offset: -9 -9;
+               rel2.to: "over";
+            }
+         }
+
+         part { name: "over";
+            mouse_events:  0;
+            description { state:    "default" 0.0;
+               rel1.offset: 4 4;
+               rel2.offset: -5 -5;
+               image {
+                  normal: "frame_1.png";
+                  border: 2 2 28 22;
+                  middle: 0;
+               }
+               fill.smooth : 0;
+            }
+            description{ state: "select" 0.0;
+
+               inherit: "default" 0.0;
+               rel1.relative: -0.4 -0.4;
+               rel2.relative: 1.4 1.4;
+            }
+         }
+         part {
+            name: "loading";
+            mouse_events:  0;
+            description {
+               state: "default" 0.0;
+               visible: 0;
+               color: 255 255 255 0;
+               max: 32 32;
+               aspect: 1.0 1.0;
+               aspect_preference: BOTH;
+               rel1.to: "walle.swallow.content";
+               rel2.to: "walle.swallow.content";
+               image {
+                  tween:  "loading-1.png";
+                  tween:  "loading-2.png";
+                  tween:  "loading-3.png";
+                  tween:  "loading-4.png";
+                  tween:  "loading-5.png";
+                  tween:  "loading-6.png";
+                  tween:  "loading-7.png";
+                  tween:  "loading-8.png";
+                  normal: "loading-9.png";
+               }
+            }
+            description {
+               state: "visible" 0.0;
+               inherit: "default" 0.0;
+               visible: 1;
+               color: 255 255 255 255;
+            }
+         }
+      }
+
+      programs
+      {
+
+         program
+         {
+            name: "sel";
+            signal: "select";
+            source: "walle";
+            action: STATE_SET "select" 0.0;
+            transition: DECELERATE 0.3;
+            target: "over";
+         }
+         program
+         {
+            name: "unsel";
+            signal: "unselect";
+            source: "walle";
+            action: STATE_SET "default" 0.0;
+            transition: ACCELERATE 0.2;
+            target: "over";
+         }
+         program {
+            name: "loading_start";
+            signal:  "walle,loading,start";
+            source:  "walle";
+            action: STATE_SET "visible" 0.0;
+            transition: LINEAR 0.3333;
+            target: "loading";
+            after:  "loading_start";
+         }
+         program {
+            name:    "loading,stop";
+            signal:  "walle,loading,stop";
+            source:  "walle";
+            action:  ACTION_STOP;
+            target: "loading_start";
+         }
+         program {
+            name:    "loading,stop2";
+            signal:  "walle,loading,stop";
+            source:  "walle";
+            action: STATE_SET "default" 0.0;
+            target: "loading";
+            transition: ACCELERATE 0.5;
+         }
+      }
+   }
+   GROUP_ICON("icon_resize.png", "walle/icon/resize")
+   GROUP_ICON("icon_rotate.png", "walle/icon/rotate")
+   GROUP_ICON("icon_config.png", "walle/icon/config")
+}
+
